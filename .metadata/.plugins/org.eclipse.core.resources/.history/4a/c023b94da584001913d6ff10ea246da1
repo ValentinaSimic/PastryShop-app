@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DanasnjiPazar" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="54fc1a3e-dd5b-47b6-975d-37308401f340">
+	<parameter name="datum" class="java.util.Date"/>
+	<parameter name="pazar" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="korisnik.ime" class="java.lang.String"/>
+	<field name="korisnik.prezime" class="java.lang.String"/>
+	<field name="racun" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="64" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="160" height="30" uuid="62726e2f-bc85-4dae-b98d-9e635b8e7df7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Pazar za dan: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="20" width="100" height="30" uuid="c5cd8ba3-74c0-4372-a9fc-65a168fd9e27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{datum}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="20" width="100" height="30" uuid="1354951b-bfa7-47ad-afea-c7b67cea1db9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[iznosi ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="360" y="20" width="100" height="30" uuid="e8674b7a-a7c4-47b3-a6dd-c130af66ae49"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pazar}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="160" height="30" backcolor="#ED5855" uuid="7d78896d-2b04-4eeb-874a-0a23fb0869fd"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Ime]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="10" width="150" height="30" backcolor="#ED5855" uuid="8eacc58f-7013-4246-86f8-326a569ab9ae"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Prezime]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="10" width="148" height="30" backcolor="#ED5855" uuid="3f553919-762d-403f-9510-f81345d3b9dc"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Racun]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="44" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="160" height="30" uuid="9dfdff94-1840-4c1b-a1bd-863162357524">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="76dd01ec-03a2-418f-b602-51e5bc2dd228"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{korisnik.ime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="150" height="30" uuid="6f810dbf-19df-4ec0-8364-ef447c6b47af">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4d9157e1-e77b-49ec-a642-a2ba28614440"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{korisnik.prezime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="309" y="0" width="149" height="30" uuid="3ccc79dd-cb02-4d06-97c3-96fd26dc5d17">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d64ade03-bfa1-419b-a80a-f7f213e3da05"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{racun}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="1" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="360" y="0" width="100" height="30" uuid="7a43e134-64f5-4347-9b51-10bd3e1695a8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="180" height="30" uuid="ee01dae2-f116-42fe-b6d9-135151056ede"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ukupno porudzbina]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="0" width="130" height="30" uuid="0a5a6595-153d-4ed5-bf72-c43868557cf2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,86 @@
+package poslasticarnica.controller;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import model.PoslasticarnicaRole;
+import model.PoslasticarnicaUser;
+import poslasticarnica.repository.PoslasticarnicaRoleRepository;
+import poslasticarnica.repository.PoslasticarnicaUserRepository;
+
+@Controller
+@RequestMapping(value="/auth")
+public class LoginController {
+
+	@Autowired
+	PoslasticarnicaUserRepository pur;
+	
+	@Autowired
+	PoslasticarnicaRoleRepository proleRepo;
+
+	@RequestMapping(value="onama", method=RequestMethod.GET) 
+	public String onama() { 
+		return "ONama";
+	}
+	
+	@RequestMapping(value="kontakt", method=RequestMethod.GET) 
+	public String kontakt() { 
+		return "Kontakt";
+	}
+	
+	@RequestMapping(value="loginPage", method=RequestMethod.GET) 
+	public String loginPage() { 
+		return "login";
+	}
+	
+	@RequestMapping(value="pocetna", method=RequestMethod.GET) 
+	public String pocetna(HttpServletRequest request) { 
+		PoslasticarnicaUser pu=pur.findByUsername(request.getParameter("username"));
+		System.out.println(pu);
+		System.out.println(proleRepo.findById(1).get());
+		if(pu.getPoslasticarnicaRoles().contains(proleRepo.findById(1).get())) {
+			return "AdminPocetna";
+		}else {
+			return "KorisnikPocetna";
+		}
+	}
+	
+
+	@RequestMapping(value="admin/pocetna", method=RequestMethod.GET) 
+	public String admin() { 
+		return "AdminPocetna";
+	}
+	
+    @RequestMapping(value = "registerUser", method = RequestMethod.GET)
+		public String newUser(Model model) {
+		PoslasticarnicaUser u = new PoslasticarnicaUser();
+		model.addAttribute("user", u);
+		return "register";
+	}
+	 
+	@RequestMapping(value = "register", method = RequestMethod.POST)
+	public String saveUser(@ModelAttribute("user") PoslasticarnicaUser u) {
+	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    u.setPassword(passwordEncoder.encode(u.getPassword()));
+		
+	    PoslasticarnicaRole role = proleRepo.findById(2).get();
+	    
+		u.addRole(role);
+		u.setDatumPrijave(new Date());
+		role.addUser(u);
+	    
+	    pur.save(u);
+		System.out.println("SAVED");
+	    return "login";
+	}
+
+}

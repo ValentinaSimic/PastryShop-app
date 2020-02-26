@@ -1,0 +1,5 @@
+package poslasticarnica.security;
+
+public class CustomUserDetailsService {
+
+}

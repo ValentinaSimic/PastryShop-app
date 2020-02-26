@@ -1,0 +1,23 @@
+package poslasticarnica.security;
+
+
+public class RoleConverter  implements Converter<String, Role> {
+	
+	PozoristeRoleRepository r;
+	
+	public RoleConverter(RoleRepository r){
+		this.r=r;
+	}
+	
+	public Role convert(String source) {
+			  int idRole=-1;
+		       try{
+		    	   idRole=Integer.parseInt(source);
+		       }
+		       catch(NumberFormatException e){
+		    	   throw new ConversionFailedException(TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(Role.class),idRole, null);
+		       }
+		      Role role=r.getOne(idRole);
+		      return role;
+		  }
+}

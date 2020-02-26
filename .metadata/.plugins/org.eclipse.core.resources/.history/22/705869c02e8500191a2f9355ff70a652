@@ -1,0 +1,136 @@
+package model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.List;
+
+
+/**
+ * The persistent class for the Torta database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Torta.findAll", query="SELECT t FROM Torta t")
+public class Torta implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idTorta;
+
+	private int cena;
+
+	private String naziv;
+
+	private String opis;
+
+	private byte[] slika;
+
+	//bi-directional many-to-one association to Komentar
+	@OneToMany(mappedBy="torta")
+	private List<Komentar> komentars;
+
+	//bi-directional many-to-many association to Porudzbina
+	@ManyToMany(mappedBy="tortas")
+	private List<Porudzbina> porudzbinas;
+
+	//bi-directional many-to-one association to Slika
+	@OneToMany(mappedBy="torta")
+	private List<Slika> slikas;
+
+	public Torta() {
+	}
+
+	public int getIdTorta() {
+		return this.idTorta;
+	}
+
+	public void setIdTorta(int idTorta) {
+		this.idTorta = idTorta;
+	}
+
+	public int getCena() {
+		return this.cena;
+	}
+
+	public void setCena(int cena) {
+		this.cena = cena;
+	}
+
+	public String getNaziv() {
+		return this.naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public String getOpis() {
+		return this.opis;
+	}
+
+	public void setOpis(String opis) {
+		this.opis = opis;
+	}
+
+	public byte[] getSlika() {
+		return this.slika;
+	}
+
+	public void setSlika(byte[] slika) {
+		this.slika = slika;
+	}
+
+	public List<Komentar> getKomentars() {
+		return this.komentars;
+	}
+
+	public void setKomentars(List<Komentar> komentars) {
+		this.komentars = komentars;
+	}
+
+	public Komentar addKomentar(Komentar komentar) {
+		getKomentars().add(komentar);
+		komentar.setTorta(this);
+
+		return komentar;
+	}
+
+	public Komentar removeKomentar(Komentar komentar) {
+		getKomentars().remove(komentar);
+		komentar.setTorta(null);
+
+		return komentar;
+	}
+
+	public List<Porudzbina> getPorudzbinas() {
+		return this.porudzbinas;
+	}
+
+	public void setPorudzbinas(List<Porudzbina> porudzbinas) {
+		this.porudzbinas = porudzbinas;
+	}
+
+	public List<Slika> getSlikas() {
+		return this.slikas;
+	}
+
+	public void setSlikas(List<Slika> slikas) {
+		this.slikas = slikas;
+	}
+
+	public Slika addSlika(Slika slika) {
+		getSlikas().add(slika);
+		slika.setTorta(this);
+
+		return slika;
+	}
+
+	public Slika removeSlika(Slika slika) {
+		getSlikas().remove(slika);
+		slika.setTorta(null);
+
+		return slika;
+	}
+
+}

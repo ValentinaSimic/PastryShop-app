@@ -1,0 +1,31 @@
+package poslasticarnica.security;
+
+
+import org.springframework.context.annotation.Role;
+import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.Converter;
+
+import model.PoslasticarnicaRole;
+import poslasticarnica.repository.PoslasticarnicaRoleRepository;
+
+public class PozoristeRoleConverter  implements Converter<String, Role> {
+	
+	PoslasticarnicaRoleRepository r;
+	
+	public PozoristeRoleConverter(PoslasticarnicaRoleRepository r){
+		this.r=r;
+	}
+	
+	public Role convert(String source) {
+			  int idRole=-1;
+		       try{
+		    	   idRole=Integer.parseInt(source);
+		       }
+		       catch(NumberFormatException e){
+		    	   throw new ConversionFailedException(TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(PozoristeRole.class),idPozoristeRole, null);
+		       }
+		      PoslasticarnicaRole role=r.getOne(idRole);
+		      return role;
+		  }
+}

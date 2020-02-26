@@ -1,0 +1,88 @@
+package model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.List;
+
+
+/**
+ * The persistent class for the Poslasticarnica database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Poslasticarnica.findAll", query="SELECT p FROM Poslasticarnica p")
+public class Poslasticarnica implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idPoslasticarnica;
+
+	private String adresa;
+
+	private String naziv;
+
+	private String telefon;
+
+	//bi-directional many-to-one association to Torta
+	@OneToMany(mappedBy="poslasticarnica")
+	private List<Torta> tortas;
+
+	public Poslasticarnica() {
+	}
+
+	public int getIdPoslasticarnica() {
+		return this.idPoslasticarnica;
+	}
+
+	public void setIdPoslasticarnica(int idPoslasticarnica) {
+		this.idPoslasticarnica = idPoslasticarnica;
+	}
+
+	public String getAdresa() {
+		return this.adresa;
+	}
+
+	public void setAdresa(String adresa) {
+		this.adresa = adresa;
+	}
+
+	public String getNaziv() {
+		return this.naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public String getTelefon() {
+		return this.telefon;
+	}
+
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
+	}
+
+	public List<Torta> getTortas() {
+		return this.tortas;
+	}
+
+	public void setTortas(List<Torta> tortas) {
+		this.tortas = tortas;
+	}
+
+	public Torta addTorta(Torta torta) {
+		getTortas().add(torta);
+		torta.setPoslasticarnica(this);
+
+		return torta;
+	}
+
+	public Torta removeTorta(Torta torta) {
+		getTortas().remove(torta);
+		torta.setPoslasticarnica(null);
+
+		return torta;
+	}
+
+}

@@ -1,0 +1,100 @@
+package poslasticarnica.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import model.Korisnik;
+import model.PoslasticarnicaUser;
+import poslasticarnica.repository.KorisnikRepository;
+import poslasticarnica.repository.PoslasticarnicaUserRepository;
+
+@Controller
+@RequestMapping(value="/LogRegist")
+public class LogovanjeRegistracijaController {
+	
+	@Autowired
+	KorisnikRepository kr;
+	
+	@Autowired
+	PoslasticarnicaUserRepository pur;
+	
+	@RequestMapping(value="/logovanje",method=RequestMethod.GET)
+	public String login(Model m, HttpServletRequest request, String username, String password){
+		
+		List<PoslasticarnicaUser> users=pur.findAll();
+		
+		for(PoslasticarnicaUser u: users) {
+			System.out.println(u.getPoslasticarnicaRoles().toString());
+		}
+		Korisnik k=kr.findByUsernameAndPassword(username, password);
+		String putanja="";
+		String poruka2="";
+		if(k!=null){
+			if(k.getIsAdmin()==0){
+				putanja="/KorisnikPocetna";
+			}
+			else{
+				putanja="/AdminPocetna";
+			}
+			
+		}
+		else{
+			putanja="Pocetna";
+			poruka2="Pogresno korisnicko ime ili lozinka!Pokusajte ponovo.";
+		}
+		request.getSession().setAttribute("korisnik", k);
+		m.addAttribute("poruka2", poruka2);
+		return putanja;
+	}
+	
+	@RequestMapping(value="/registracija", method=RequestMethod.POST)
+	public String registracija(Model m, HttpServletRequest request) {
+		
+		String ime=request.getParameter("ime");
+		String prezime=request.getParameter("prezime");
+		String username=request.getParameter("username");
+		String password=request.getParameter("password");
+		String adresa=request.getParameter("adresa");
+		
+		if(ime!="" && prezime!="" && username!="" && password!="" && adresa!="" ){
+			Korisnik k=new Korisnik();
+			k.setIme(ime);
+			k.setPrezime(prezime);
+			k.setUsername(username);
+			k.setPassword(password);
+			k.setAdresa(adresa);
+			k.setDatumPrijave(new Date());
+			k.setIsAdmin(0);
+			boolean uspesno=kr.save(k)!=null?true:false;
+			String poruka="";
+			String putanja="";
+			request.getSession().setAttribute("korisnik", k);
+			
+			if(uspesno){
+				poruka="Uspesna registracija";
+				putanja="/Registracija";
+			}
+			
+			else{
+				poruka="Neuspesno registrovanje";
+				putanja= "/Greska";
+			}
+			
+			m.addAttribute("poruka", poruka);
+			return putanja;
+		}
+		else{
+			String poruka1="Morate popuniti sve podatke iz forme!";
+			m.addAttribute("poruka1",poruka1);
+			return "/Registracija";
+		}
+	}
+}

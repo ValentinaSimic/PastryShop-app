@@ -1,0 +1,9 @@
+package poslasticarnica.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import model.PoslasticarnicaRole;
+
+public interface PoslasticarnicaRoleRepository extends JpaRepository<PoslasticarnicaRole, Integer> {
+
+}

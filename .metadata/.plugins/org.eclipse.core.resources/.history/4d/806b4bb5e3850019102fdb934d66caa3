@@ -1,0 +1,76 @@
+package model;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+
+
+/**
+ * The persistent class for the PoslasticarnicaRole database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="PoslasticarnicaRole.findAll", query="SELECT p FROM PoslasticarnicaRole p")
+public class PoslasticarnicaRole implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idRole;
+
+	private String naziv;
+
+	//bi-directional many-to-many association to PoslasticarnicaUser
+	@ManyToMany
+	@JoinTable(
+		name="UserRole"
+		, joinColumns={
+			@JoinColumn(name="idRole")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="idUser")
+			}
+		)
+	private Set<PoslasticarnicaUser> poslasticarnicaUsers=new HashSet<>();
+
+	public PoslasticarnicaRole() {
+	}
+
+	public int getIdRole() {
+		return this.idRole;
+	}
+
+	public void setIdRole(int idRole) {
+		this.idRole = idRole;
+	}
+
+	public String getNaziv() {
+		return this.naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public Set<PoslasticarnicaUser> getPoslasticarnicaUsers() {
+		return this.poslasticarnicaUsers;
+	}
+
+	public void setPoslasticarnicaUsers(Set<PoslasticarnicaUser> poslasticarnicaUsers) {
+		this.poslasticarnicaUsers = poslasticarnicaUsers;
+	}
+
+	public void addUser(PoslasticarnicaUser u) {
+		this.poslasticarnicaUsers.add(u);
+	}
+}

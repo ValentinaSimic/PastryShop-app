@@ -1,0 +1,116 @@
+package poslasticarnica.controller;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import model.Komentar;
+import model.Korisnik;
+import model.Porudzbina;
+import model.Torta;
+import poslasticarnica.repository.KomentarRepository;
+import poslasticarnica.repository.PorudzbinaRepository;
+import poslasticarnica.repository.TortaRepository;
+
+@Controller
+@RequestMapping(value="/Korisnik")
+public class KorisnikController {
+	
+	@Autowired
+	TortaRepository tr;
+	
+	@Autowired
+	KomentarRepository kr;
+	
+	@Autowired
+	PorudzbinaRepository pr;
+	
+	@RequestMapping(value="/getTorte",method=RequestMethod.GET)
+	public String getTorte(HttpServletRequest request) {
+		
+		List<Torta> torte=tr.findAll();
+		request.getSession().setAttribute("torte", torte);
+		
+		return "KorisnikPrikazTorti";
+	}
+	
+	@RequestMapping(value="/vidiTortu",method=RequestMethod.GET)
+	public String vidiTortu(Model m,String naziv,HttpServletRequest request) {
+		
+		Torta t=tr.findByNaziv(naziv);
+		List<Komentar> komentari=kr.findByTorta(t);
+		request.getSession().setAttribute("komentari", komentari);
+		request.getSession().setAttribute("torta", t);
+		return "KorisnikJednaTorta";
+	}
+	
+	@RequestMapping(value="/dodajKomentar",method=RequestMethod.POST)
+	public String dodajKomentar(Model m, String sadrzaj,HttpServletRequest request) {
+		
+		Komentar k=new Komentar();
+		Korisnik korisnik=(Korisnik)request.getSession().getAttribute("korisnik");
+		Torta torta=(Torta)request.getSession().getAttribute("torta");
+		
+		k.setDatumPostavljanja(new Date());
+		k.setKorisnik(korisnik);
+		k.setSadrzaj(sadrzaj);
+		k.setTorta(torta);
+		try {
+		kr.save(k);
+		String poruka="Hvala na komentarisanju!";
+		
+		m.addAttribute("poruka",poruka);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		List<Komentar> listaK=kr.findByTorta(torta);
+		m.addAttribute("listaK",listaK);
+		return "KorisnikJednaTorta";
+	}
+	
+	@RequestMapping(value="/poruci",method=RequestMethod.POST)
+	public String poruci(HttpServletRequest request, Integer idTorta) {
+		
+		List<Torta> torte=new ArrayList<Torta>();
+		Torta t=tr.findById(idTorta).get();
+		torte.add(t);
+		
+		request.getSession().setAttribute("tortePoruci", torte);
+		return "KorisnikPrikazTorti";
+	}
+	
+	@RequestMapping(value="/zavrsiPorudzbinu", method=RequestMethod.POST)
+	public String zavrsiPorudzbinu(HttpServletRequest request,Model m, Date datumIsporuke) {
+		
+		Korisnik korisnik=(Korisnik)request.getSession().getAttribute("korisnik");
+		List<Torta> torte=(List<Torta>)request.getSession().getAttribute("tortePoruci");
+		int racun=0;
+		
+		for(Torta t : torte) {
+			racun+=t.getCena();
+		}
+		
+		Porudzbina p=new Porudzbina();
+		p.setDatumIsporuke(new Date());
+		p.setKorisnik(korisnik);
+		p.setTortas(torte);
+		
+		try {
+			pr.save(p);
+			String poruka1="Hvala na porucivanju, vas racun iznosi: ";
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		m.addAttribute("poruka1",poruka1);
+		return "KorisnikPrikazTorti";
+	}
+}

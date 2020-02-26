@@ -1,0 +1,57 @@
+package model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+
+/**
+ * The persistent class for the PoslasticarnicaUserRole database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="PoslasticarnicaUserRole.findAll", query="SELECT p FROM PoslasticarnicaUserRole p")
+public class PoslasticarnicaUserRole implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idUserRole;
+
+	//bi-directional many-to-one association to PoslasticarnicaUser
+	@ManyToOne
+	@JoinColumn(name="idUser")
+	private PoslasticarnicaUser poslasticarnicaUser;
+
+	//bi-directional many-to-one association to PoslasticarnicaRole
+	@ManyToOne
+	@JoinColumn(name="idRole")
+	private PoslasticarnicaRole poslasticarnicaRole;
+
+	public PoslasticarnicaUserRole() {
+	}
+
+	public int getIdUserRole() {
+		return this.idUserRole;
+	}
+
+	public void setIdUserRole(int idUserRole) {
+		this.idUserRole = idUserRole;
+	}
+
+	public PoslasticarnicaUser getPoslasticarnicaUser() {
+		return this.poslasticarnicaUser;
+	}
+
+	public void setPoslasticarnicaUser(PoslasticarnicaUser poslasticarnicaUser) {
+		this.poslasticarnicaUser = poslasticarnicaUser;
+	}
+
+	public PoslasticarnicaRole getPoslasticarnicaRole() {
+		return this.poslasticarnicaRole;
+	}
+
+	public void setPoslasticarnicaRole(PoslasticarnicaRole poslasticarnicaRole) {
+		this.poslasticarnicaRole = poslasticarnicaRole;
+	}
+
+}

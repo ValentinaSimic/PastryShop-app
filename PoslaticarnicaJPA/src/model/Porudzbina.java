@@ -1,0 +1,98 @@
+package model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+
+/**
+ * The persistent class for the Porudzbina database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Porudzbina.findAll", query="SELECT p FROM Porudzbina p")
+public class Porudzbina implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idPorudzbina;
+
+	@Temporal(TemporalType.DATE)
+	private Date datumIsporuke;
+
+	private int kolicina;
+
+	private int racun;
+
+	//bi-directional many-to-one association to Korisnik
+	@ManyToOne
+	@JoinColumn(name="idKorisnik")
+	private Korisnik korisnik;
+
+	//bi-directional many-to-many association to Torta
+	@ManyToMany
+	@JoinTable(
+		name="Stavka"
+		, joinColumns={
+			@JoinColumn(name="idPorudzbina")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="idTorta")
+			}
+		)
+	private List<Torta> tortas;
+
+	public Porudzbina() {
+	}
+
+	public int getIdPorudzbina() {
+		return this.idPorudzbina;
+	}
+
+	public void setIdPorudzbina(int idPorudzbina) {
+		this.idPorudzbina = idPorudzbina;
+	}
+
+	public Date getDatumIsporuke() {
+		return this.datumIsporuke;
+	}
+
+	public void setDatumIsporuke(Date datumIsporuke) {
+		this.datumIsporuke = datumIsporuke;
+	}
+
+	public int getKolicina() {
+		return this.kolicina;
+	}
+
+	public void setKolicina(int kolicina) {
+		this.kolicina = kolicina;
+	}
+
+	public int getRacun() {
+		return this.racun;
+	}
+
+	public void setRacun(int racun) {
+		this.racun = racun;
+	}
+
+	public Korisnik getKorisnik() {
+		return this.korisnik;
+	}
+
+	public void setKorisnik(Korisnik korisnik) {
+		this.korisnik = korisnik;
+	}
+
+	public List<Torta> getTortas() {
+		return this.tortas;
+	}
+
+	public void setTortas(List<Torta> tortas) {
+		this.tortas = tortas;
+	}
+
+}

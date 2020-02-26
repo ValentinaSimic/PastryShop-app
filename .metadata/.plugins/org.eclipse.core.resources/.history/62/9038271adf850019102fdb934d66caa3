@@ -1,0 +1,10 @@
+package poslasticarnica.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import model.PoslasticarnicaUser;
+
+public interface PoslasticarnicaUserRepository extends JpaRepository<PoslasticarnicaUser, Integer> {
+	
+	
+}

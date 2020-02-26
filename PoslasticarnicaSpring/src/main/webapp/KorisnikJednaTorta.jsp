@@ -1,0 +1,160 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" href="/Poslasticara/style.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+
+</style>
+<title>Insert title here</title>
+<style>
+
+#sadrzaj {
+	text-align: center;
+	margin-top: 0px;
+	padding-top: 0px;
+}
+
+#poruke, #greske {
+	margin-left:0px;
+	margin-right:0px;
+	
+	padding: 0px;
+}
+
+#poruke div, #greske div {
+	color: white;
+}
+
+
+#poruke div {
+	background-color: rgb(15,5,3);
+}
+
+#greske div {
+	background-color: rgb(139,24,24);
+}
+
+body{
+	background-image: url(slike/slika2.jpg);
+}
+table {
+	margin-left:40px;
+    border-collapse: collapse;
+    width: 40%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {background-color: white;}
+
+th {
+    background-color:  #ff1a1a;
+    color: white;
+}
+textarea{
+	margin-left:40px;
+	background-color:#ffe6e6;
+}
+
+button, input[type=submit]{
+	background-color: #ff1a1a;
+	color: white;
+	margin: 8px 0;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+</style>
+</head>
+<body class="w3-light-grey">
+<div class="w3-bar w3-white w3-large">
+		<a href="/Poslasticara/KorisnikPocetna.jsp" class="w3-bar-item w3-button w3-red w3-mobile"><i
+			class="fa fa-bed w3-margin-right"></i>Logo</a> <a
+			href="/Poslasticara/ONama.jsp"
+			class="w3-bar-item w3-button  w3-light-pink w3-mobile">O nama</a> <a
+			href="/Poslasticara/Kontakt.jsp"
+			class="w3-bar-item w3-button w3-light-pink w3-mobile">Kontakt</a> 
+			  <a href="/Poslasticara/Pocetna.jsp" class="w3-bar-item w3-button w3-right w3-light-grey w3-mobile">Odjavi se</a>
+			
+	</div><br>
+<div class="w3-bar w3-white w3-large">
+	<h2>&emsp;Informacije o torti:</h2>
+			<c:if test="${!empty torta.slika }">
+			&emsp;&emsp;<img height="190" width="180" src="/Poslasticara/Torte/get-image/${torta.idTorta } "/>
+			</c:if>
+			<c:if test="${empty torta.slika }">
+				Nije definisana
+			</c:if><br>
+	<b>&emsp;&emsp;Naziv:</b> ${torta.naziv } <br>
+	<b>&emsp;&emsp;Cena:</b> ${torta.cena }<br> 
+	<b>&emsp;&emsp;Kratak opis:</b> ${torta.opis } <br><br>
+</div>	<br>
+	 <div>
+		<c:if test="${!empty poruka}">
+			<div id="sadrzaj">
+		<div id="poruke">
+			<div>${poruka }</div>
+		</div>
+	</div>
+	</c:if>
+
+	<h4><i>&emsp;Dodaj komentar:</i></h4>
+	<form action="/Poslasticara/Korisnik/dodajKomentar" method="post">
+	<input type="text" name="sadrzaj">
+	<input type="submit" value="Dodaj"/>
+	</form> <br>
+	<h4><i>&emsp;Komentari za tortu:</i></h4>
+
+	<c:if test="${empty listaK }">
+		<c:if test="${!empty komentari }">
+		<table border="1" style="background:#ffe6e6">
+			<tr>
+				<th>Komentar:</th>
+			</tr>
+			<c:forEach var="kom" items="${komentari }">
+				<tr>
+					<td>${kom.sadrzaj }</td>
+				</tr>
+			</c:forEach>
+		</table>
+		</c:if>
+		<c:if test="${empty komentari }">
+			<div id="sadrzaj">
+				<div id="greske">
+					<div>Trenutno nema komentara!</div>
+				</div>
+			</div>
+		</c:if>
+	</c:if>
+	<c:if test="${!empty listaK }">
+		<table border="1" style="background: #ffe6e6">
+			<tr>
+				<th>Komentar:</th>
+				
+			</tr>
+			<c:forEach var="kom" items="${listaK }">
+				<tr>
+					<td>${kom.sadrzaj }</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</c:if>
+<br>
+
+
+	
+		
+</body>
+</html>

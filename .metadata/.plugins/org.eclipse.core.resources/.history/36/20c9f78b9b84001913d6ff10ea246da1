@@ -1,0 +1,217 @@
+package poslasticarnica.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.lowagie.text.pdf.codec.Base64.OutputStream;
+
+import domain.TortaImage;
+import model.Komentar;
+import model.Porudzbina;
+import model.Slika;
+import model.Torta;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import poslasticarnica.repository.KomentarRepository;
+import poslasticarnica.repository.PorudzbinaRepository;
+import poslasticarnica.repository.SlikaRepository;
+import poslasticarnica.repository.TortaRepository;
+
+@Controller
+@RequestMapping(value = "/Torte")
+public class TortaController {
+
+	@Autowired
+	PorudzbinaRepository pr;
+
+	@Autowired
+	KomentarRepository kr;
+
+	@Autowired
+	TortaRepository tr;
+	
+	@Autowired
+	SlikaRepository sr;
+
+	@RequestMapping(value = "/unosTorteInit", method = RequestMethod.GET)
+	public String initialize(Model m) {
+		m.addAttribute("tortaI", new TortaImage());
+		return "UnosTorte";
+	}
+	
+	@RequestMapping(value="saveTortaSlika", method=RequestMethod.POST)
+	public String saveSobaSlika(Model m, @ModelAttribute("tortaI") TortaImage tortaImage, HttpServletRequest request){
+		MultipartFile file =tortaImage.getSlika();
+		if (null != file) {
+			String fileName = file.getOriginalFilename();
+			String filePath;
+			try {
+				filePath = System.getProperty("user.dir");
+				System.out.println("Putanja je "+filePath);
+				File imageFile = new File(filePath, fileName);
+
+				file.transferTo(imageFile);
+				Torta t1=new Torta();
+				t1.setNaziv(tortaImage.getNaziv());
+				t1.setCena(tortaImage.getCena());
+				t1.setOpis(tortaImage.getOpis());
+				t1.setSlika(Files.readAllBytes(imageFile.toPath()));				
+				tr.save(t1);
+				String poruka="Uspesno uneta torta!";
+				m.addAttribute("poruka", poruka);
+				request.getSession().setAttribute("t1", t1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return "UnosTorte";
+	}
+
+	@RequestMapping(value = "prikazPorudzbina", method = RequestMethod.GET)
+	public String PrikazRezervacija(Model m, HttpServletRequest request) {
+		List<Porudzbina> lista = pr.findAll();
+		request.getSession().setAttribute("lista", lista);
+		return "AdminPrikazPorudzbina";
+	}
+
+	@RequestMapping(value = "izbrisiPorudzbinu", method = RequestMethod.GET)
+	public String izbrisiRezervaciju(Model m, HttpServletRequest request) {
+		int idP = Integer.parseInt(request.getParameter("idP"));
+		pr.deleteById(idP);
+		List<Porudzbina> listaP = pr.findAll();
+		String poruka = "Uspesno izbrisana porudzbina";
+
+		m.addAttribute("listaR", listaP);
+		m.addAttribute("poruka", poruka);
+		return "AdminPrikazPorudzbina";
+	}
+
+	@RequestMapping(value = "prikazKomentara", method = RequestMethod.GET)
+	public String prikazKomentara(Model m, HttpServletRequest request) {
+		List<Komentar> sviKomentari = kr.findAll();
+
+		request.getSession().setAttribute("sviKomentari", sviKomentari);
+
+		return "AdminPrikazKomentara";
+	}
+
+	@RequestMapping(value = "izbrisiKomentar", method = RequestMethod.GET)
+	public String izbrisiKomentar(Model m, HttpServletRequest request) {
+		int idKom = Integer.parseInt(request.getParameter("idKomentar"));
+		kr.deleteById(idKom);
+		List<Komentar> listaK = kr.findAll();
+		String poruka = "Uspesno obrisan komentar!";
+		m.addAttribute("poruka", poruka);
+		m.addAttribute("listaK", listaK);
+		return "AdminPrikazKomentara";
+	}
+
+	@RequestMapping(value = "prikazTorti", method = RequestMethod.GET)
+	public String prikazTorti(Model m, HttpServletRequest request) {
+		List<Torta> torte = tr.findAll();
+		request.getSession().setAttribute("torte", torte);
+		return "AdminPrikazTorti";
+
+	}
+
+	@RequestMapping(value = "nadjiTortu", method = RequestMethod.GET)
+	public String nadjiTorut(Model m, HttpServletRequest request) {
+		int idTorta = Integer.parseInt(request.getParameter("idTorta"));
+		Torta torta = tr.findById(idTorta).get();
+		List<Komentar> komentari = kr.findByTorta(torta);
+		List<Slika> slike=sr.findByTorta(torta);
+		request.getSession().setAttribute("komentari", komentari);
+		request.getSession().setAttribute("torta", torta);
+		request.getSession().setAttribute("slike", slike);
+
+		
+		return "AdminPrikazDetaljaTorte";
+
+	}
+
+	@RequestMapping(value = "get-image/{id}", method = RequestMethod.GET)
+	public void getSlika(@PathVariable("id") int idTorta, HttpServletResponse response) {
+		Torta t = tr.findById(idTorta).get();
+		byte[] slika = t.getSlika();
+		response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+		try {
+			response.getOutputStream().write(slika);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "izbrisiTortu", method = RequestMethod.GET)
+	public String izbrisiSobu1(Model m, HttpServletRequest request) {
+		int idTorta = Integer.parseInt(request.getParameter("idTorta"));
+		Torta t = tr.findById(idTorta).get();
+		List<Komentar> komentari = (List<Komentar>) (request.getSession().getAttribute("komentari"));
+		List<Slika> slike = (List<Slika>) (request.getSession().getAttribute("slike"));
+		List<Torta> novaLista = null;
+		String poruka = "";
+		if(t.getPorudzbinas()!=null) {
+			poruka = "Ne mozete obrisati tortu pre isporuka !Postoje porudzbine za nju.";
+
+		}
+		try {
+			for (Komentar k : komentari) {
+				kr.delete(k);
+			}
+			for (Slika s : slike) {
+				sr.delete(s);
+			}
+			tr.delete(t);
+			poruka = "Uspesno obrisana soba!";
+			novaLista = tr.findAll();
+		} catch (Exception e) {
+			poruka = "Ne mozete obrisati tortu pre isporuka !Postoje porudzbine za nju.";
+		}
+		m.addAttribute("novaLista", novaLista);
+		m.addAttribute("poruka", poruka);
+		return "AdminPrikazTorti";
+	}
+	
+	@RequestMapping(value="pazarDanas", method=RequestMethod.GET)
+	public void generatePDF( HttpServletResponse response) throws Exception{
+		
+		List<Porudzbina> porudzbine=pr.findByDatumIsporuke(new Date());
+		response.setContentType("text/html");
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(porudzbine);
+		InputStream inputStream = this.getClass().getResourceAsStream("/jasperreports/DanasnjiPazar.jrxml");
+		JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("datum", new Date());
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
+		inputStream.close();
+		
+		
+		response.setContentType("application/x-download");
+		response.addHeader("Content-disposition", "attachment; filename=Uloge.pdf");
+		OutputStream out = response.getOutputStream();
+		JasperExportManager.exportReportToPdfStream(jasperPrint,out);
+	}
+}

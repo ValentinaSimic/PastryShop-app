@@ -1,0 +1,5 @@
+INDEX VERSION 1.131
+/home/valentina/ProjekatIS2.VS/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/213434042.index
+/PoslasticarnicaSpring/src/main/java
+/home/valentina/ProjekatIS2.VS/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/2181948580.index
+/PoslasticarnicaSpring/src/main/java
