@@ -33,12 +33,15 @@ The task of the application is to enable the respondent to answer the survey que
 * CSS
 * JavaScript
 * Java, Spring Boot framework-it was used to implement business logic.
-* MySql database- Instead of the traditional structure of relational database tables, MongoDB is document-oriented and survey-         friendly.The base was not installed locally and NoSql Booster was used to access the base.
+* Jasper Report-Is used to generate reports and the tool has been added as an addition to Eclipse.
+* MySql- Database is located locally on the computer, MySql Workbench was used for the work.
 
 
 ## Functionality
-The user accesses the application, after which he can see all active polls and choose which one he wants to answer. After the user completes the survey, all the answers are stored in the database and the results of the selected survey are automatically updated. The user can see the results of all surveys.
-A MapReduce was used to implement a slightly more complex method.
+The user logs in, the data is checked, and the role that the user has is loaded from the database.
+The appearance and functionality of the application are different for different roles.
+The buyer can review the offer and see feedback from other buyers, and can then choose the cakes to order, after which they can review their cart and order. Admin can perform all weird operations and mark cookies delivered. Admin also gets a current day marketplace as part of a PDF document.
+
 
 ## Status
 Project is: _finished_
