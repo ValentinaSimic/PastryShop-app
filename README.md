@@ -26,12 +26,11 @@ Depending on whether the application is accessed by a user or an administrator, 
 ![Example screenshot](./screenshots/8.jpg) 
 
 ## Task
-The task of the application is to enable the respondent to answer the survey questions, to store the respondent's answers, where everything will be anonymous. Processing of data obtained through the answers of the respondents and presentation of the data obtained.
+The task of the app is to improve the confectionery business through online sales, as well as to enable workers to more easily manipulate sales
 
 ## Technologies
 * HTML5
 * CSS
-* JavaScript
 * Java, Spring Boot framework-it was used to implement business logic.
 * Jasper Report-Is used to generate reports and the tool has been added as an addition to Eclipse.
 * MySql- Database is located locally on the computer, MySql Workbench was used for the work.
