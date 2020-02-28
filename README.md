@@ -8,7 +8,7 @@
 * [Technologies](#technologies)
 * [Functionality](#functionality)
 * [Status](#status)
-* [Run Locally](#run-locally)
+
 
 
 ## General info
@@ -44,9 +44,6 @@ The buyer can review the offer and see feedback from other buyers, and can then 
 
 ## Status
 Project is: _finished_
-
-## Run Locally
-
 
 
 ## Contact
